@@ -1,0 +1,6 @@
+Visited at depth: 0
+0 1 5
+7 2 8
+4 3 6
+
+
