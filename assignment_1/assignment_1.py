@@ -15,13 +15,35 @@
 
 from copy import deepcopy
 import math
+import sys
+from board_generator import generate_unique_random_numbers
+
+# print(sys.getrecursionlimit())
+sys.setrecursionlimit(100000)
 
 
-# Initial state of 8-Puzzle
-init_state =[0,1,5,7,2,8,4,3,6]
+BOARD_SIZE = 9
 
-# Goal state of 8-Puzzle
-goal_state = [0,1,2,3,4,5,6,7,8]
+
+# GENERATE INITIAL STATES
+init_state = generate_unique_random_numbers(BOARD_SIZE)
+
+# GENERATE GOAL STATES
+goal_state_1 = [0]
+goal_state_2 = []
+
+for i in range (1,BOARD_SIZE):
+    goal_state_1.append(i)
+    goal_state_2.append(i)
+
+goal_state_2.append(0)
+
+
+
+print ("Initial state:", init_state)
+print ("Goal state 1:", goal_state_1)
+print ("Goal state 2:", goal_state_2)
+
 
 class State:
 
@@ -59,14 +81,14 @@ class State:
         return new_state
 
     def goal_check(self):
-        return self.board == goal_state
+        return self.board == goal_state_1 or self.board == goal_state_2
 
     def move_up(self):
         move = self.empty - math.sqrt(len(self.board))
         move = int(move)
         # print("move up in range",move in range(len(self.board)))
         if move in range(len(self.board)):
-            self.up = 'travelled'
+            # self.up = 'travelled'
             new_board = self.swap(self.board, self.empty, move)
             # new_state = State(new_board, parent=self, depth=self.depth+1)
             return new_board
@@ -82,7 +104,7 @@ class State:
         # print("move down in range",move in range(len(self.board)))
 
         if move in range(len(self.board)):
-            self.down = 'travelled'
+            # self.down = 'travelled'
             new_board = self.swap(self.board, self.empty, move)
             # new_state = State(new_board, parent=self, depth=self.depth+1)
             return new_board
@@ -95,11 +117,12 @@ class State:
     def move_left(self):
         move = self.empty - 1
         move = int(move)
+        at_left_border = self.empty % (math.sqrt(len(self.board))) == 0
 
         # print("move left in range", move in range(len(self.board)))
 
-        if move in range(len(self.board)):
-            self.left = 'travelled'
+        if move in range(len(self.board)) and not at_left_border:
+            # self.left = 'travelled'
             new_board = self.swap(self.board, self.empty, move)
             # new_state = State(new_board, parent=self, depth=self.depth+1)
             return new_board
@@ -112,11 +135,11 @@ class State:
     def move_right(self):
         move = self.empty + 1
         move = int(move)
-
+        at_right_border = (self.empty) % (math.sqrt(len(self.board))) == (math.sqrt(len(self.board)) - 1)
         # print("move right in range",move in range(len(self.board)))
 
-        if move in range(len(self.board)):
-            self.right = 'travelled'
+        if move in range(len(self.board)) and not at_right_border:
+            # self.right = 'travelled'
             new_board = self.swap(self.board, self.empty, move)
             # new_state = State(new_board, parent=self, depth=self.depth+1)
             return new_board
@@ -137,7 +160,9 @@ class State:
         up_board = self.move_up()
         # print("up_board",up_board)
         if (up_board != 'unavailable' and self.up == 'untravelled'):
+            print("moving up")
             up_state = State(up_board,parent=self,down="travelled",depth=self.depth+1)
+            self.up = "travelled"
             if (up_state.search() == True):
                 return True
         
@@ -145,16 +170,21 @@ class State:
         down_board = self.move_down()
         # print("down_board",down_board)
         if (down_board != 'unavailable' and self.down == 'untravelled'):
+            print("moving down")
             down_state = State(down_board,parent=self,up="travelled",depth=self.depth+1)
-
+            self.down = "travelled"
             if (down_state.search() == True):
                 return True
+            
+
 
         # Search left
         left_board = self.move_left()
         # print("left_board",left_board)
         if (left_board != 'unavailable' and self.left == 'untravelled'):
+            print("moving left")
             left_state = State(left_board,parent=self,right="travelled",depth=self.depth+1)
+            self.left = "travelled"
             if (left_state.search() == True):
                 return True
         
@@ -162,13 +192,23 @@ class State:
         right_board = self.move_right()
         # print("right_board",right_board)
         if (right_board != 'unavailable' and self.right == 'untravelled'):
+            print("moving right")
             right_state = State(right_board,parent=self,left="travelled",depth=self.depth+1)
+            self.right = "travelled"
             if (right_state.search() == True):
                 return True
         
 
     def print_state(self):
-        print('Visited at depth:', self.depth)
+        print('Visit state status:')
+        print('Depth:', self.depth)
+        print('Up: ',self.up)
+        print('Down: ',self.down)
+        print('Left: ',self.left)
+        print('Right: ',self.right)
+        print('Empty space:',self.empty)
+        print('Is goal:',self.is_goal)
+        
         # Check if array length is a perfect square
         length = len(self.board)
         sqrt_length = int(math.sqrt(length))
