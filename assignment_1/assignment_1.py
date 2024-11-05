@@ -23,6 +23,7 @@ sys.setrecursionlimit(10000000)
 
 
 BOARD_SIZE = 16
+# ADD MAXIMUM DEPTH TO REDUCE RECURSION DEPTH
 MAX_DEPTH = 30
 
 
@@ -40,8 +41,6 @@ for i in range (1,BOARD_SIZE):
 goal_state_2.append(0)
 
 
-# init_state=[1,2,3,4,0,5,7,8,6]
-# init_state = [4,8,2,0,3,5,1,6,7]
 print ("Initial state:", init_state)
 print ("Goal state 1:", goal_state_1)
 print ("Goal state 2:", goal_state_2)
@@ -73,12 +72,6 @@ class State:
     def swap(self,board, x, y):
         new_state = board.copy()
         new_state[x], new_state[y] = new_state[y], new_state[x]
-        # new_state = deepcopy(board)
-        # new_state[x], new_state[y] = new_state[y], new_state[x]
-
-
-        # print("swapped from ",x,"to",y)
-        # print("type of new_state",type(new_state))
 
         return new_state
 
@@ -88,11 +81,8 @@ class State:
     def move_up(self):
         move = self.empty - math.sqrt(len(self.board))
         move = int(move)
-        # print("move up in range",move in range(len(self.board)))
         if move in range(len(self.board)):
-            # self.up = 'travelled'
             new_board = self.swap(self.board, self.empty, move)
-            # new_state = State(new_board, parent=self, depth=self.depth+1)
             return new_board
         else:
             self.up = 'unavailable'
@@ -103,12 +93,9 @@ class State:
         move = self.empty + math.sqrt(len(self.board))
         move = int(move)
 
-        # print("move down in range",move in range(len(self.board)))
 
         if move in range(len(self.board)):
-            # self.down = 'travelled'
             new_board = self.swap(self.board, self.empty, move)
-            # new_state = State(new_board, parent=self, depth=self.depth+1)
             return new_board
 
         else:
@@ -121,12 +108,8 @@ class State:
         move = int(move)
         at_left_border = self.empty % (math.sqrt(len(self.board))) == 0
 
-        # print("move left in range", move in range(len(self.board)))
-
         if move in range(len(self.board)) and not at_left_border:
-            # self.left = 'travelled'
             new_board = self.swap(self.board, self.empty, move)
-            # new_state = State(new_board, parent=self, depth=self.depth+1)
             return new_board
 
         else:
@@ -138,12 +121,9 @@ class State:
         move = self.empty + 1
         move = int(move)
         at_right_border = (self.empty) % (math.sqrt(len(self.board))) == (math.sqrt(len(self.board)) - 1)
-        # print("move right in range",move in range(len(self.board)))
 
         if move in range(len(self.board)) and not at_right_border:
-            # self.right = 'travelled'
             new_board = self.swap(self.board, self.empty, move)
-            # new_state = State(new_board, parent=self, depth=self.depth+1)
             return new_board
 
         else:
@@ -165,7 +145,6 @@ class State:
 
         # Search up
         up_board = self.move_up()
-        # print("up_board",up_board)
         if (up_board != 'unavailable' and self.up == 'untravelled' and tuple(up_board) not in visited):
             print("moving up")
             up_state = State(up_board,parent=self,down="travelled",depth=self.depth+1)
@@ -175,7 +154,6 @@ class State:
         
         # Search down
         down_board = self.move_down()
-        # print("down_board",down_board)
         if (down_board != 'unavailable' and self.down == 'untravelled' and tuple(down_board) not in visited):
             print("moving down")
             down_state = State(down_board,parent=self,up="travelled",depth=self.depth+1)
@@ -187,7 +165,6 @@ class State:
 
         # Search left
         left_board = self.move_left()
-        # print("left_board",left_board)
         if (left_board != 'unavailable' and self.left == 'untravelled' and tuple(left_board) not in visited):
             print("moving left")
             left_state = State(left_board,parent=self,right="travelled",depth=self.depth+1)
@@ -197,7 +174,6 @@ class State:
         
         # Search right
         right_board = self.move_right()
-        # print("right_board",right_board)
         if (right_board != 'unavailable' and self.right == 'untravelled' and tuple(right_board) not in visited):
             print("moving right")
             right_state = State(right_board,parent=self,left="travelled",depth=self.depth+1)
