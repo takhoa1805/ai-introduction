@@ -23,6 +23,7 @@ sys.setrecursionlimit(10000000)
 
 
 BOARD_SIZE = 16
+MAX_DEPTH = 30
 
 
 # GENERATE INITIAL STATES
@@ -40,6 +41,7 @@ goal_state_2.append(0)
 
 
 # init_state=[1,2,3,4,0,5,7,8,6]
+# init_state = [4,8,2,0,3,5,1,6,7]
 print ("Initial state:", init_state)
 print ("Goal state 1:", goal_state_1)
 print ("Goal state 2:", goal_state_2)
@@ -156,6 +158,9 @@ class State:
             self.print_state()
             return True
         
+        if (self.depth > MAX_DEPTH):
+            return False
+
         visited.add(tuple(self.board))
 
         # Search up
@@ -200,6 +205,7 @@ class State:
             if (right_state.search(visited) == True):
                 return True
         
+        return False
 
     def print_state(self):
         print('Visit state status:')
