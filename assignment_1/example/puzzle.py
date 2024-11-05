@@ -32,7 +32,7 @@ def get_neighbors(state):
     return neighbors
 
 # Thuật toán DFS
-def dfs(start, goal, depth_limit=50):
+def dfs(start, goal, depth_limit=1000):
     stack = [(start, [])]  # Stack chứa trạng thái và đường đi hiện tại
     visited = set()
 
@@ -64,9 +64,9 @@ def print_state(state):
 
 # Ví dụ chạy với puzzle 3x3 (8-puzzle)
 start_state = [
-    [1, 2, 3],
-    [4, 0, 5],  # 0 là ô trống
-    [6, 7, 8]
+    [2, 0, 6],
+    [1, 3, 5],  # 0 là ô trống
+    [7, 4, 8]
 ]
 
 goal_state = [

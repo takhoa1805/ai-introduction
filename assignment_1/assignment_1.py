@@ -19,10 +19,10 @@ import sys
 from board_generator import generate_unique_random_numbers
 
 # print(sys.getrecursionlimit())
-sys.setrecursionlimit(100000)
+sys.setrecursionlimit(10000000)
 
 
-BOARD_SIZE = 9
+BOARD_SIZE = 16
 
 
 # GENERATE INITIAL STATES
@@ -39,7 +39,7 @@ for i in range (1,BOARD_SIZE):
 goal_state_2.append(0)
 
 
-
+# init_state=[1,2,3,4,0,5,7,8,6]
 print ("Initial state:", init_state)
 print ("Goal state 1:", goal_state_1)
 print ("Goal state 2:", goal_state_2)
@@ -149,31 +149,33 @@ class State:
             return 'unavailable'
 
 
-    def search(self):
+    def search(self,visited):
         self.print_state()
         if (self.is_goal):
             print ("GOAL STATE FOUND!")
             self.print_state()
             return True
         
+        visited.add(tuple(self.board))
+
         # Search up
         up_board = self.move_up()
         # print("up_board",up_board)
-        if (up_board != 'unavailable' and self.up == 'untravelled'):
+        if (up_board != 'unavailable' and self.up == 'untravelled' and tuple(up_board) not in visited):
             print("moving up")
             up_state = State(up_board,parent=self,down="travelled",depth=self.depth+1)
             self.up = "travelled"
-            if (up_state.search() == True):
+            if (up_state.search(visited) == True):
                 return True
         
         # Search down
         down_board = self.move_down()
         # print("down_board",down_board)
-        if (down_board != 'unavailable' and self.down == 'untravelled'):
+        if (down_board != 'unavailable' and self.down == 'untravelled' and tuple(down_board) not in visited):
             print("moving down")
             down_state = State(down_board,parent=self,up="travelled",depth=self.depth+1)
             self.down = "travelled"
-            if (down_state.search() == True):
+            if (down_state.search(visited) == True):
                 return True
             
 
@@ -181,21 +183,21 @@ class State:
         # Search left
         left_board = self.move_left()
         # print("left_board",left_board)
-        if (left_board != 'unavailable' and self.left == 'untravelled'):
+        if (left_board != 'unavailable' and self.left == 'untravelled' and tuple(left_board) not in visited):
             print("moving left")
             left_state = State(left_board,parent=self,right="travelled",depth=self.depth+1)
             self.left = "travelled"
-            if (left_state.search() == True):
+            if (left_state.search(visited) == True):
                 return True
         
         # Search right
         right_board = self.move_right()
         # print("right_board",right_board)
-        if (right_board != 'unavailable' and self.right == 'untravelled'):
+        if (right_board != 'unavailable' and self.right == 'untravelled' and tuple(right_board) not in visited):
             print("moving right")
             right_state = State(right_board,parent=self,left="travelled",depth=self.depth+1)
             self.right = "travelled"
-            if (right_state.search() == True):
+            if (right_state.search(visited) == True):
                 return True
         
 
@@ -224,7 +226,8 @@ class State:
         
 
 state = State(init_state)
-state.search()
+visited_states = set()
+state.search(visited_states)
 
 
 
