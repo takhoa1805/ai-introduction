@@ -6,7 +6,7 @@
 BOARD_SIZE = 9
 ```
 
-### Execute script
-```
-python3 assignment_1.py
+### Execute script and dump to "out"
+``` bash
+python3 assignment_1.py > out
 ```
