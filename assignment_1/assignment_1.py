@@ -24,7 +24,7 @@ sys.setrecursionlimit(10000000)
 
 BOARD_SIZE = 16
 # ADD MAXIMUM DEPTH TO REDUCE RECURSION DEPTH
-MAX_DEPTH = 30
+MAX_DEPTH = 50
 
 
 # GENERATE INITIAL STATES
@@ -39,6 +39,7 @@ for i in range (1,BOARD_SIZE):
     goal_state_2.append(i)
 
 goal_state_2.append(0)
+
 
 
 print ("Initial state:", init_state)
@@ -207,9 +208,39 @@ class State:
         print ('\n')
         
 
-state = State(init_state)
-visited_states = set()
-state.search(visited_states)
+# Check if the initial state is solvable
+def is_solvable(init_state):
+    size = len(init_state)
+    width = int(math.sqrt(size))
+
+    inversions = 0
+    for i in range(size):
+        for j in range(i + 1, size):
+            if init_state[i] != 0 and init_state[j] != 0 and init_state[i] > init_state[j]:
+                inversions += 1
+
+    empty_index = init_state.index(0)
+    empty_row_from_bottom = width - (empty_index // width)
+
+    if width % 2 == 1:
+        return inversions % 2 == 0
+    else:
+        return (inversions % 2 == 0 and empty_row_from_bottom % 2 == 1) or \
+               (inversions % 2 == 1 and empty_row_from_bottom % 2 == 0)
+
+
+if (not is_solvable(init_state)):
+    print("")
+    print ("THE INITIAL STATE IS NOT SOLVABLE")
+    print("")
+
+    exit()
+else:
+    state = State(init_state)
+    visited_states = set()
+    state.search(visited_states)
+
+
 
 
 
