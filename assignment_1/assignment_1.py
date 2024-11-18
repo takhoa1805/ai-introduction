@@ -22,9 +22,9 @@ from board_generator import generate_unique_random_numbers
 sys.setrecursionlimit(10000000)
 
 
-BOARD_SIZE = 16
+BOARD_SIZE = 9
 # ADD MAXIMUM DEPTH TO REDUCE RECURSION DEPTH
-MAX_DEPTH = 50
+MAX_DEPTH = 10000
 
 
 # GENERATE INITIAL STATES
