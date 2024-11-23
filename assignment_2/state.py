@@ -128,7 +128,14 @@ class State:
     
     
     def act_move(self, move: UltimateTTT_Move):
+        print('\n')
+
+        print("Valid moves: ", self.get_valid_moves)
+        print("Move: ", move)
+        print("Global cells: ", self.global_cells)
+        print('\n')
         if not self.is_valid_move(move):
+
             raise ValueError(
                 "move {0} on local board is not valid".format(move)
             )
